@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+html {
+  --color-text: black;
+  --color-background: #EEE5E9;
+  --color-button: #DAA520;
+  --color-highlight: #3E5962;
+  --color-decor: #532E1B;
+  --gutter: 16px;
+}
+#root {
+  background-color: var(--color-background);
+}
+html,body,#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+.myContainer {
+  background-color: var(--color-background);
+  width: 100%;
+  height: 100%;
+}
+.aligned {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.generalText {
+  font-family: 'Righteous', 'arial';
+}
+.decorText {
+  font-family: 'Lobster',cursive;
+}
+#login {
+  background-color: var(--color-highlight);
+  width: 450px;
+  height: 600px;
+  border-radius: 12px;
+  margin: 10vh auto;
+}
+#title {
+  font-family: 'Lobster', cursive;
+  text-align: center;
+}
+#username, #password {
+  width: 90%;
+  margin: auto;
+}
+.buttons .loginButton {
+  background-color: var(--color-button);
+  border-radius: 47px;
+}
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: auto;
+}
+#bar {
+  background-color: black;
+  display: flex;
+  justify-content: flex-end;
+  height: 50px;
+}
+.bar-item {
+  display: inline-flex;
+  font-family: 'Righteous',cursive;
+  font-size: large;
+  color: white;
+  width: 125px;
+  height: 100%;
+}
+.bar-text {
+  align-self: center;
+}
+#home {
+  background-image: url('bg.jpg');
+  opacity: 30%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
