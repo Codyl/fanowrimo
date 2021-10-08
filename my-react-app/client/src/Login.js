@@ -26,10 +26,10 @@ class Login extends React.Component
                         <Form.Control id='password' type="password" placeholder="Password" />
                     </Form.Group>
                     <Form.Group className="mb-3 buttons">
-                        <Button className='loginButton' type="submit">
+                        <Button className='loginButton' type="submit" onClick={this.props.login}>
                             Login
                         </Button>
-                        <Button className='loginButton' type="submit">
+                        <Button className='loginButton' type="submit" onClick={this.props.login}>
                             Create Account
                         </Button>
                     </Form.Group>
