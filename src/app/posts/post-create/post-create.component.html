@@ -1,13 +1,31 @@
 <mat-card>
-  <form (submit)="onAddPost(f)" #f="ngForm">
+  <form (submit)="onSavePost(f)" #f="ngForm">
     <mat-form-field>
-      <input matInput type="text" ngModel name="title" required minlength="5" #title="ngModel" placeholder="Post Title">
-      <mat-error *ngIf="title.invalid">Please enter a post title with at least 5 characters</mat-error>
+      <input
+        matInput
+        type="text"
+        [ngModel]="post?.title"
+        name="title"
+        required
+        minlength="5"
+        #title="ngModel"
+        placeholder="Post Title"
+      />
+      <mat-error *ngIf="title.invalid"
+        >Please enter a post title with at least 5 characters</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
-      <textarea matInput rows="6" ngModel name="content" required #content="ngModel" placeholder="Post Content"></textarea>
+      <textarea
+        matInput
+        rows="6"
+        [ngModel]="post?.content"
+        name="content"
+        required
+        #content="ngModel"
+        placeholder="Post Content"
+      ></textarea>
       <mat-error *ngIf="content.invalid">Please enter a post content</mat-error>
-    
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Save Post</button>
   </form>
