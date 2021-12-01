@@ -3,8 +3,11 @@
     <mat-expansion-panel-header>
       {{ post.title }}
     </mat-expansion-panel-header>
-    {{ post.content }}
-    <mat-action-row>
+    <div class="post-image">
+      <img [src]="post.imagePath" alt="post.title" />
+    </div>
+    <p>{{ post.content }}</p>
+    <mat-action-row *ngIf="userIsAuthenticated">
       <a mat-button color="accent" [routerLink]="['/edit', post.id]">EDIT</a>
       <button mat-button color="warn" (click)="onDelete(post.id)">
         DELETE
