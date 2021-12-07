@@ -28,10 +28,12 @@ export class AuthService {
 
   createUser(email: string, password: string) {
     const AuthData: AuthData = { email: email, password: password };
-    this.httpClient
+    return this.httpClient
       .post('http://localhost:3000/api/user/signup', AuthData)
-      .subscribe((response) => {
-        console.log(response);
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      }, error => {
+        this.authStatusListener.next(false);
       });
   }
 
@@ -105,14 +107,14 @@ export class AuthService {
   private getAuthData() {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
-    const userId = localStorage.getItem('userId')
+    const userId = localStorage.getItem('userId');
     if (!token || !expirationDate) {
       return;
     }
     return {
       token: token,
       expiration: new Date(expirationDate),
-      userId: userId
+      userId: userId,
     };
   }
   private setAuthTimer(duration: number) {
