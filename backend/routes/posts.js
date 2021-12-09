@@ -31,23 +31,32 @@ router.post(
   multer({ storage: storage }).single("image"),
   checkAuth,
   (req, res, next) => {
+    console.log(req.body);
     const url = req.protocol + "://" + req.get("host");
     const post = new Post({
       title: req.body.title,
-      content: req.body.content,
+      description: req.body.description,
       imagePath: url + "/images/" + req.file.filename,
       creator: req.userData.userId,
+      goal: req.body.goal,
+      wordCount: [{ count: req.body.wordCount, date: new Date().toDateString() }],
+      yearWritten: req.body.yearWritten
     });
+    console.log(post)
     post
       .save()
       .then((createdPost) => {
+        console.log(createdPost)
         res.status(201).json({
           message: "Post added successfully",
           post: {
             id: createdPost._id,
             title: createdPost.title,
-            content: createdPost.content,
+            description: createdPost.description,
             imagePath: createdPost.imagePath,
+            goal: createdPost.goal,
+            wordCount: createdPost.wordCount,
+            yearWritten: createdPost.yearWritten
           },
         });
       })
@@ -72,9 +81,11 @@ router.put(
     const post = new Post({
       _id: req.body.id,
       title: req.body.title,
-      content: req.body.content,
+      description: req.body.description,
       imagePath: imagePath,
       creator: req.userData.userId,
+      goal: req.body.goal,
+      wordCount: req.body.wordCount
     });
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
       .then((result) => {
@@ -111,6 +122,7 @@ router.get("", (req, res, next) => {
       return Post.count();
     })
     .then((count) => {
+      console.log(fetchedPosts)
       res.status(200).json({
         message: "Posts fetched successfully!",
         posts: fetchedPosts,

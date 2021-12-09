@@ -20,11 +20,6 @@ export class PostListComponent implements OnInit, OnDestroy {
   postsPerPage = 1;
   currentPage = 1;
   pageSizeOptions = [1, 2, 4, 10];
-  // posts = [
-  //   { title: 'tst', content: 'The content' },
-  //   { title: 'tst 2', content: 'The content' },
-  //   { title: 'tst 3', content: 'The content' },
-  // ];
   constructor(
     public postService: PostService,
     private authService: AuthService
@@ -38,9 +33,10 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postService.getPosts(this.postsPerPage, this.currentPage);
     this.postsSub = this.postService
       .getPostUpdateListener()
-      .subscribe((postsData: { posts: Post[], postCount: number }) => {
+      .subscribe((postsData: { posts: Post[]; postCount: number }) => {
         this.userId = this.authService.getUserId();
         this.posts = postsData.posts;
+        console.log(this.posts)
         this.totalPosts = postsData.postCount;
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -61,6 +57,6 @@ export class PostListComponent implements OnInit, OnDestroy {
   onDelete(postId: string) {
     this.postService.deletePost(postId).subscribe(() => {
       this.postService.getPosts(this.postsPerPage, this.currentPage);
-    })
+    });
   }
 }

@@ -5,10 +5,10 @@
         matInput
         type="text"
         formControlName="title"
-        placeholder="Post Title"
+        placeholder="Book Title"
       />
       <mat-error *ngIf="form.get('title').invalid"
-        >Please enter a post title.</mat-error
+        >Please enter a book title.</mat-error
       >
     </mat-form-field>
     <div>
@@ -27,13 +27,35 @@
       <textarea
         matInput
         rows="4"
-        formControlName="content"
-        placeholder="Post Content"
+        formControlName="description"
+        placeholder="Book Description"
       ></textarea>
-      <mat-error *ngIf="form.get('content').invalid"
-        >Please enter a post title.</mat-error
+      <mat-error *ngIf="form.get('description').invalid"
+        >Please enter a book title.</mat-error
       >
     </mat-form-field>
-    <button mat-raised-button color="accent" type="submit">Save Post</button>
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        formControlName="goal"
+        placeholder="Word count goal"
+      />
+      <mat-error *ngIf="form.get('goal').invalid"
+        >Please enter a number for your word count goal.</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        formControlName="wordCount"
+        placeholder="Current word count"
+      />
+      <mat-error *ngIf="form.get('wordCount').invalid"
+        >Please enter your current word count.</mat-error
+      >
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">Save Book</button>
   </form>
 </mat-card>

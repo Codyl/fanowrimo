@@ -5,3 +5,17 @@ mat-form-field {
 mat-spinner {
   margin: auto;
 }
+
+mat-card {
+  box-sizing: border-box;
+  width: 50%;
+  left: 25%; 
+  margin-top: 20%;
+  padding: 50px;
+}
+
+h1 {
+  font-size: 50px;
+  text-align: center;
+  padding: 10px;
+}

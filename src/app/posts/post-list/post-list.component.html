@@ -1,12 +1,16 @@
 <mat-accordion multi="true" *ngIf="posts.length > 0">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
-      {{ post.title }}
+      {{ post.title }} {{post.yearWritten }}
     </mat-expansion-panel-header>
     <div class="post-image">
       <img [src]="post.imagePath" alt="post.title" />
     </div>
-    <p>{{ post.content }}</p>
+    <p>{{ post.description }}</p>
+    <p>My word count goal is: {{ post.goal }} and my current word count is {{ post.wordCount[post.wordCount.length-1].count }}</p>
+    <div *ngFor="let wordCount of post.wordCount">
+      <p>{{wordCount.count}}</p>
+    </div>
     <mat-action-row *ngIf="userIsAuthenticated && userId === post.creator">
       <a mat-button color="accent" [routerLink]="['/edit', post.id]">EDIT</a>
       <button mat-button color="warn" (click)="onDelete(post.id)">
@@ -15,7 +19,13 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<mat-paginator [length]="totalPosts" [pageSize]="postsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" *ngIf="posts.length > 0"></mat-paginator>
+<mat-paginator
+  [length]="totalPosts"
+  [pageSize]="postsPerPage"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onChangedPage($event)"
+  *ngIf="posts.length > 0"
+></mat-paginator>
 <p class="info-text mat-body-1" *ngIf="posts.length === 0">
   There are no posts yet
 </p>

@@ -24,17 +24,22 @@ export class PostCreateComponent implements OnInit {
   constructor(public postService: PostService, public route: ActivatedRoute) {}
 
   ngOnInit() {
+    //The Reactive form control data
     this.form = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3)],
       }),
-      content: new FormControl(null, { validators: [Validators.required] }),
+      description: new FormControl(null, { validators: [Validators.required] }),
       image: new FormControl(null, {
         validators: [Validators.required],
         asyncValidators: [mimeType],
       }),
+      goal: new FormControl(null, { validators: [Validators.required]}),
+      wordCount: new FormControl(null, { validators: [Validators.required]}),
     });
+    //Watch changes in params from route
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      //If route in url is ~edit/:postId we are editing and fetch using postService getPost function
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
@@ -44,14 +49,18 @@ export class PostCreateComponent implements OnInit {
           this.post = {
             id: postData._id,
             title: postData.title,
-            content: postData.content,
+            description: postData.description,
             imagePath: postData.imagePath,
-            creator: postData.creator
+            creator: postData.creator,
+            goal: postData.goal,
+            wordCount: postData.wordCount,
           };
           this.form.setValue({
             title: this.post.title,
-            content: this.post.content,
+            description: this.post.description,
             image: this.post.imagePath,
+            goal: this.post.goal,
+            wordCount: this.post.wordCount[this.post.wordCount.length-1].count,
           });
         });
       } else {
@@ -80,15 +89,20 @@ export class PostCreateComponent implements OnInit {
     if (this.mode === 'create') {
       this.postService.addPost(
         this.form.value.title,
-        this.form.value.content,
-        this.form.value.image
+        this.form.value.description,
+        this.form.value.image,
+        this.form.value.goal,
+        this.form.value.wordCount
       );
     } else {
+      console.log(this.form.value.wordCount);
       this.postService.updatePost(
         this.postId,
         this.form.value.title,
-        this.form.value.content,
-        this.form.value.image
+        this.form.value.description,
+        this.form.value.image,
+        this.form.value.goal,
+        this.form.value.wordCount
       );
     }
     this.form.reset();
