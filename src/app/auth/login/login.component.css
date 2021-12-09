@@ -12,10 +12,21 @@ mat-card {
   left: 25%; 
   margin-top: 20%;
   padding: 50px;
+  /* background-color: #3E5962; */
 }
 
 h1 {
   font-size: 50px;
   text-align: center;
   padding: 10px;
+  font-family: 'Righteous', cursive;
+}
+
+input {
+  /* background-color: white; */
+}
+
+button {
+  border-radius: 50px;
+  padding: 0 10%;
 }

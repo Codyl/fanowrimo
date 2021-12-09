@@ -17,7 +17,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   userId: string;
   totalPosts = 0;
-  postsPerPage = 1;
+  postsPerPage = 3;
   currentPage = 1;
   pageSizeOptions = [1, 2, 4, 10];
   constructor(
@@ -36,8 +36,10 @@ export class PostListComponent implements OnInit, OnDestroy {
       .subscribe((postsData: { posts: Post[]; postCount: number }) => {
         this.userId = this.authService.getUserId();
         this.posts = postsData.posts;
-        console.log(this.posts)
-        this.totalPosts = postsData.postCount;
+        // console.log(this.posts)
+        this.totalPosts = this.posts.filter(
+          (post) => post.creator === this.userId
+        ).length;
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService

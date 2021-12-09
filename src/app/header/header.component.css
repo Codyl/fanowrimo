@@ -16,3 +16,15 @@ a {
 ul {
   display: flex;
 }
+
+mat-toolbar {
+  background-color: black;
+}
+
+.logo {
+  width: 90px;
+}
+
+button {
+  color: white;
+}

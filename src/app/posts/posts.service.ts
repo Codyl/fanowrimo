@@ -21,7 +21,7 @@ export class PostService {
         map((postData) => {
           return {
             posts: postData.posts.map((post) => {
-              console.log(post.wordCount, "get word count")
+              // console.log(post.wordCount, "get word count")
               return {
                 title: post.title,
                 description: post.description,
@@ -40,7 +40,7 @@ export class PostService {
       .subscribe((transformedPostsData) => {
         // console.log(transformedPostsData);
         this.posts = transformedPostsData.posts;
-        console.log(this.posts, " <- posts updated")
+        // console.log(this.posts, " <- posts updated")
         this.postsUpdated.next({
           posts: [...this.posts],
           postCount: transformedPostsData.maxPosts,

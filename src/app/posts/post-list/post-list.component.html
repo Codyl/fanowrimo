@@ -1,4 +1,4 @@
-<mat-accordion multi="true" *ngIf="posts.length > 0">
+<!-- <mat-accordion multi="true" *ngIf="posts.length > 0">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
       {{ post.title }} {{post.yearWritten }}
@@ -19,13 +19,40 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+
+<p class="info-text mat-body-1" *ngIf="posts.length === 0">
+  There are no posts yet
+</p> -->
+<div class="book-list" *ngIf="posts.length > 0">
+  <div class="arrow-left"></div>
+  <div *ngFor="let post of posts; let i = index">
+    <div
+      class="book-card"
+      [ngStyle]="{ left: i * 30 + 8 + '%' }"
+      *ngIf="userIsAuthenticated && userId === post.creator"
+    >
+      <div
+        class="container"
+        
+      >
+        <div class="book-year">{{ post.yearWritten }}</div>
+        <div>
+          <img [src]="post.imagePath" alt="post.title" class="book-image" />
+        </div>
+        <div class="book-title">
+          <h2 style="margin: 10px">{{ post.title }}</h2>
+        </div>
+      </div>
+      <a [routerLink]="['/edit', post.id]">
+        <div class="book-edit-button">EDIT</div>
+      </a>
+    </div>
+    <div class="arrow-right"></div>
+  </div>
+</div>
 <mat-paginator
   [length]="totalPosts"
   [pageSize]="postsPerPage"
-  [pageSizeOptions]="pageSizeOptions"
   (page)="onChangedPage($event)"
   *ngIf="posts.length > 0"
 ></mat-paginator>
-<p class="info-text mat-body-1" *ngIf="posts.length === 0">
-  There are no posts yet
-</p>

@@ -5,6 +5,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { PostService } from '../posts.service';
 import { Post } from '../post.model';
 import { mimeType } from './mime-type.validator';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-post-create',
@@ -34,8 +35,8 @@ export class PostCreateComponent implements OnInit {
         validators: [Validators.required],
         asyncValidators: [mimeType],
       }),
-      goal: new FormControl(null, { validators: [Validators.required]}),
-      wordCount: new FormControl(null, { validators: [Validators.required]}),
+      goal: new FormControl(null, { validators: [Validators.required] }),
+      wordCount: new FormControl(null, { validators: [Validators.required] }),
     });
     //Watch changes in params from route
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -60,9 +61,70 @@ export class PostCreateComponent implements OnInit {
             description: this.post.description,
             image: this.post.imagePath,
             goal: this.post.goal,
-            wordCount: this.post.wordCount[this.post.wordCount.length-1].count,
+            wordCount:
+              this.post.wordCount[this.post.wordCount.length - 1].count,
           });
-        });
+
+
+
+          //Now we draw the d3 chart
+          const margin = { top: 10, right: 30, bottom: 30, left: 60 },
+            width = 1060 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+          
+          // Make the svg
+          const svg = d3
+            .select('div#line')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr(
+              'transform',
+              'translate(' + margin.left + ',' + margin.top + ')'
+          );
+          const x = d3
+            .scaleTime()
+            .domain(
+              d3.extent(postData.wordCount.map(d => Date.parse(d.date) )
+              )
+            )
+            .range([0, width]);
+          svg
+            .append('g')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(d3.axisBottom(x));
+          // console.log(x)
+          const y = d3
+            .scaleLinear()
+            .domain([
+              0,
+              postData.goal,
+            ])
+            .range([height, 0]);
+          svg.append('g').call(d3.axisLeft(y));
+
+          svg
+            .append('path')
+            .datum(postData.wordCount)
+            .attr('fill', 'none')
+            .attr('stroke', 'steelblue')
+            .attr('stroke-width', 1.5)
+            .attr(
+              'd',
+              d3
+                .line()
+                .x(function (d) {
+                  // console.log(d)
+                  return x(Date.parse(d.date));
+                })
+                .y(function (d) {
+                  return y(d.count);
+                })
+          );
+
+        }
+        );
       } else {
         this.mode = 'create';
         this.postId = null;
