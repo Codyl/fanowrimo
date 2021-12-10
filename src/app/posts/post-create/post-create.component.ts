@@ -19,7 +19,7 @@ export class PostCreateComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
-  private mode = 'create';
+  mode = 'create';
   private postId: string;
 
   constructor(public postService: PostService, public route: ActivatedRoute) {}
@@ -65,13 +65,11 @@ export class PostCreateComponent implements OnInit {
               this.post.wordCount[this.post.wordCount.length - 1].count,
           });
 
-
-
           //Now we draw the d3 chart
           const margin = { top: 10, right: 30, bottom: 30, left: 60 },
             width = 1060 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
-          
+
           // Make the svg
           const svg = d3
             .select('div#line')
@@ -82,12 +80,11 @@ export class PostCreateComponent implements OnInit {
             .attr(
               'transform',
               'translate(' + margin.left + ',' + margin.top + ')'
-          );
+            );
           const x = d3
             .scaleTime()
             .domain(
-              d3.extent(postData.wordCount.map(d => Date.parse(d.date) )
-              )
+              d3.extent(postData.wordCount.map((d) => Date.parse(d.date)))
             )
             .range([0, width]);
           svg
@@ -97,10 +94,7 @@ export class PostCreateComponent implements OnInit {
           // console.log(x)
           const y = d3
             .scaleLinear()
-            .domain([
-              0,
-              postData.goal,
-            ])
+            .domain([0, postData.goal])
             .range([height, 0]);
           svg.append('g').call(d3.axisLeft(y));
 
@@ -121,10 +115,8 @@ export class PostCreateComponent implements OnInit {
                 .y(function (d) {
                   return y(d.count);
                 })
-          );
-
-        }
-        );
+            );
+        });
       } else {
         this.mode = 'create';
         this.postId = null;
@@ -167,6 +159,6 @@ export class PostCreateComponent implements OnInit {
         this.form.value.wordCount
       );
     }
-    this.form.reset();
+    // this.form.reset();
   }
 }

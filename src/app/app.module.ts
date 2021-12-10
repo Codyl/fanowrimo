@@ -9,12 +9,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { AppComponent } from './app.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { HeaderComponent } from './header/header.component';
-import { PostService } from './posts/posts.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from 'app-routing.module';
 import { LoginComponent } from './auth/login/login.component';
@@ -35,7 +35,7 @@ import { FamilyComponent } from './family/family.component';
     SignupComponent,
     ErrorComponent,
     HomeComponent,
-    FamilyComponent
+    FamilyComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,12 +50,13 @@ import { FamilyComponent } from './family/family.component';
     MatExpansionModule,
     HttpClientModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonToggleModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

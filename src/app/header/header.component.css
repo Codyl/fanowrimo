@@ -23,6 +23,7 @@ mat-toolbar {
 
 .logo {
   width: 90px;
+  vertical-align: middle;
 }
 
 button {

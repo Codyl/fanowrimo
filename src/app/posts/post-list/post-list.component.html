@@ -28,12 +28,10 @@
   <div *ngFor="let post of posts; let i = index">
     <div
       class="book-card"
-      [ngStyle]="{ left: i * 30 + 8 + '%' }"
+      [ngStyle]="{ left: (100 / postsPerPage) * i + 5 + '%' }"
       *ngIf="userIsAuthenticated && userId === post.creator"
     >
-      <div
-        class="container"
-      >
+      <div class="container">
         <div class="book-year">{{ post.yearWritten }}</div>
         <div>
           <img [src]="post.imagePath" alt="post.title" class="book-image" />

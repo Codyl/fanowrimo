@@ -30,6 +30,16 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log(window.screen.width);
+    if (window.screen.width > 1800) {
+      this.postsPerPage = 4;
+    } else if (window.screen.width > 1400) {
+      this.postsPerPage = 3;
+    } else if (window.screen.width > 800) {
+      this.postsPerPage = 2;
+    } else {
+      this.postsPerPage = 1;
+    }
     this.postService.getPosts();
     this.postsSub = this.postService
       .getPostUpdateListener()
@@ -57,14 +67,17 @@ export class PostListComponent implements OnInit, OnDestroy {
   // }
 
   onArrowClicked(clickEvent: any) {
-      if (
-        clickEvent.target.classList.contains('arrow-right') &&
-        this.currentPage< Math.ceil(this.totalPosts / 3)
-      ) {
-        this.currentPage = this.currentPage + 1;
-      } else if (clickEvent.target.classList.contains('arrow-left') && this.currentPage - 1 > 0) {
-        this.currentPage = this.currentPage - 1;
-      }
+    if (
+      clickEvent.target.classList.contains('arrow-right') &&
+      this.currentPage < Math.ceil(this.totalPosts / this.postsPerPage)
+    ) {
+      this.currentPage = this.currentPage + 1;
+    } else if (
+      clickEvent.target.classList.contains('arrow-left') &&
+      this.currentPage - 1 > 0
+    ) {
+      this.currentPage = this.currentPage - 1;
+    }
     this.postService.getPosts();
   }
 

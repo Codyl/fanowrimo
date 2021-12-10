@@ -1,1 +1,80 @@
-<p>family works!</p>
+<h1>Family</h1>
+<mat-button-toggle-group name="familyMethod" aria-label="Family Method" #method>
+  <mat-button-toggle value="join" (change)="onMethodChange($event)"
+    >Join</mat-button-toggle
+  >
+  <mat-button-toggle value="create" (change)="onMethodChange($event)"
+    >Create</mat-button-toggle
+  >
+</mat-button-toggle-group>
+<mat-card *ngIf="selectedValue === 'create'">
+  <!-- <mat-card-header>Join your family group</mat-card-header> -->
+  <mat-card-content>
+    <form (submit)="onCreateFamily(loginForm)" #loginForm="ngForm">
+      <mat-form-field>
+        <input
+          matInput
+          name="familyName"
+          type="text"
+          ngModel
+          #familyInput="ngModel"
+          required
+          placeholder="Enter family group name"
+        />
+        <mat-error>Please enter a family group name.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          name="code"
+          ngModel
+          #code="ngModel"
+          required
+          placeholder="Enter family code"
+        />
+        <mat-error>Please enter family code</mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="secondary">Create</button>
+    </form>
+  </mat-card-content>
+</mat-card>
+<mat-card *ngIf="selectedValue === 'join'">
+  <!-- <mat-card-header>Join your family group</mat-card-header> -->
+  <mat-card-content>
+    <form (submit)="onJoinFamily(loginForm)" #loginForm="ngForm">
+      <mat-form-field>
+        <input
+          matInput
+          name="familyName"
+          type="text"
+          ngModel
+          #familyInput="ngModel"
+          required
+          placeholder="Enter family group name"
+        />
+        <mat-error>Please enter a family group name.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          name="code"
+          ngModel
+          #code="ngModel"
+          required
+          placeholder="Enter family code"
+        />
+        <mat-error>Please enter family code</mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="secondary">Join</button>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<h1>Family group name</h1>
+<button mat-raised-button color="accent">Share join code</button>
+<mat-card>
+  <mat-card-header>Family members name</mat-card-header>
+  <mat-card-content>Family members latest book</mat-card-content>
+</mat-card>

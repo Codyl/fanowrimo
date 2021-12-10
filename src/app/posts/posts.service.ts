@@ -10,7 +10,11 @@ export class PostService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   getPosts() {
     this.http
@@ -21,7 +25,7 @@ export class PostService {
         map((postData) => {
           return {
             posts: postData.posts
-              .filter(post => post.creator === this.authService.getUserId())
+              .filter((post) => post.creator === this.authService.getUserId())
               .map((post) => {
                 // console.log(post.wordCount, "get word count")
                 return {
@@ -62,18 +66,24 @@ export class PostService {
       imagePath: string;
       creator: string;
       goal: number;
-      wordCount: [{count: number, date: string}];
+      wordCount: [{ count: number; date: string }];
     }>('http://localhost:3000/api/posts/' + id);
   }
 
-  addPost(title: string, description: string, image: File, goal: number, wordCount: number) {
+  addPost(
+    title: string,
+    description: string,
+    image: File,
+    goal: number,
+    wordCount: number
+  ) {
     const postData = new FormData();
     postData.append('title', title);
     postData.append('description', description);
     postData.append('image', image, title);
     postData.append('goal', `${goal}`);
     postData.append('wordCount', `${wordCount}`);
-    postData.append('yearWritten', new Date().getFullYear().toString())
+    postData.append('yearWritten', new Date().getFullYear().toString());
     this.http
       .post<{ message: string; post: Post }>(
         'http://localhost:3000/api/posts/',
@@ -93,52 +103,51 @@ export class PostService {
     wordCount: number
   ) {
     let postData: Post | FormData;
-    let oldWordCountArr: [{count: number, date: string}];
+    let oldWordCountArr: [{ count: number; date: string }];
     this.getPost(id).subscribe((postDataForCount) => {
       oldWordCountArr = postDataForCount.wordCount;
       //If written on same day change the last write to have the new count
       let newWordCount;
-      if (oldWordCountArr[oldWordCountArr.length - 1].date == new Date().toDateString())
-      {
+      if (
+        oldWordCountArr[oldWordCountArr.length - 1].date ==
+        new Date().toDateString()
+      ) {
         oldWordCountArr[oldWordCountArr.length - 1] = {
           count: wordCount,
           date: oldWordCountArr[oldWordCountArr.length - 1].date,
         };
-        newWordCount = [...oldWordCountArr]
-    } else {
-      newWordCount = [
-        ...oldWordCountArr,
-        { count: wordCount, date: new Date().toDateString() },
-      ];
-      
-    }
-        if (typeof image === 'object') {
-          postData = new FormData();
-          postData.append('id', id);
-          postData.append('title', title);
-          postData.append('description', description);
-          postData.append('image', image, title);
-          postData.append('goal', `${goal}`);
-          postData.append('wordCount', `${wordCount}`);
-        } else {
-          postData = {
-            id: id,
-            title: title,
-            description: description,
-            imagePath: image,
-            creator: null,
-            goal: goal,
-            wordCount: newWordCount
-          };
-        }
+        newWordCount = [...oldWordCountArr];
+      } else {
+        newWordCount = [
+          ...oldWordCountArr,
+          { count: wordCount, date: new Date().toDateString() },
+        ];
+      }
+      if (typeof image === 'object') {
+        postData = new FormData();
+        postData.append('id', id);
+        postData.append('title', title);
+        postData.append('description', description);
+        postData.append('image', image, title);
+        postData.append('goal', `${goal}`);
+        postData.append('wordCount', `${wordCount}`);
+      } else {
+        postData = {
+          id: id,
+          title: title,
+          description: description,
+          imagePath: image,
+          creator: null,
+          goal: goal,
+          wordCount: newWordCount,
+        };
+      }
       this.http
         .put('http://localhost:3000/api/posts/' + id, postData)
         .subscribe((response) => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/books']);
         });
     });
-
-    
   }
 
   deletePost(postId: string) {
