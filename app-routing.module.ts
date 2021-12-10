@@ -6,10 +6,14 @@ import { PostCreateComponent } from 'src/app/posts/post-create/post-create.compo
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { SignupComponent } from 'src/app/auth/signup/signup.component';
 import { AuthGuard } from 'src/app/auth/auth.guard';
+import { HomeComponent } from 'src/app/home/home.component';
+import { FamilyComponent } from 'src/app/family/family.component';
 
 const routes: Routes = [
-  { path: '', component: PostListComponent },
+  { path: '', component: HomeComponent},
   { path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },
+  { path: 'books', component: PostListComponent, canActivate: [AuthGuard] },
+  { path: 'family', component: FamilyComponent, canActivate: [AuthGuard] },
   {
     path: 'edit/:postId',
     component: PostCreateComponent,

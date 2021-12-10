@@ -24,7 +24,7 @@
   There are no posts yet
 </p> -->
 <div class="book-list" *ngIf="posts.length > 0">
-  <div class="arrow-left"></div>
+  <div class="arrow-left" (click)="onArrowClicked($event)"></div>
   <div *ngFor="let post of posts; let i = index">
     <div
       class="book-card"
@@ -33,7 +33,6 @@
     >
       <div
         class="container"
-        
       >
         <div class="book-year">{{ post.yearWritten }}</div>
         <div>
@@ -47,12 +46,15 @@
         <div class="book-edit-button">EDIT</div>
       </a>
     </div>
-    <div class="arrow-right"></div>
+    <div class="arrow-right" (click)="onArrowClicked($event)"></div>
   </div>
 </div>
-<mat-paginator
+<!-- <mat-paginator
   [length]="totalPosts"
   [pageSize]="postsPerPage"
   (page)="onChangedPage($event)"
   *ngIf="posts.length > 0"
-></mat-paginator>
+></mat-paginator> -->
+<a [routerLink]="['/create']">
+  <button mat-raised-button color="primary">Create New Book</button>
+</a>

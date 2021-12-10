@@ -31,7 +31,7 @@ router.post(
   multer({ storage: storage }).single("image"),
   checkAuth,
   (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     const url = req.protocol + "://" + req.get("host");
     const post = new Post({
       title: req.body.title,
@@ -46,7 +46,7 @@ router.post(
     post
       .save()
       .then((createdPost) => {
-        console.log(createdPost)
+        // console.log(createdPost)
         res.status(201).json({
           message: "Post added successfully",
           post: {
@@ -109,20 +109,15 @@ router.put(
 );
 
 router.get("", (req, res, next) => {
-  const pageSize = +req.query.pageSize;
-  const currentPage = +req.query.page;
   const postQuery = Post.find();
   let fetchedPosts;
-  if (pageSize && currentPage) {
-    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
-  }
   postQuery
     .then((documents) => {
       fetchedPosts = documents;
       return Post.count();
     })
     .then((count) => {
-      console.log(fetchedPosts)
+      // console.log(fetchedPosts)
       res.status(200).json({
         message: "Posts fetched successfully!",
         posts: fetchedPosts,

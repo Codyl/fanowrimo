@@ -35,8 +35,8 @@ export class PostCreateComponent implements OnInit {
         validators: [Validators.required],
         asyncValidators: [mimeType],
       }),
-      goal: new FormControl(null, { validators: [Validators.required] }),
-      wordCount: new FormControl(null, { validators: [Validators.required] }),
+      goal: new FormControl(50000, { validators: [Validators.required] }),
+      wordCount: new FormControl(0, { validators: [Validators.required] }),
     });
     //Watch changes in params from route
     this.route.paramMap.subscribe((paramMap: ParamMap) => {

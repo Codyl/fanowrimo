@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -30,16 +30,16 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.postService.getPosts(this.postsPerPage, this.currentPage);
+    this.postService.getPosts();
     this.postsSub = this.postService
       .getPostUpdateListener()
       .subscribe((postsData: { posts: Post[]; postCount: number }) => {
         this.userId = this.authService.getUserId();
-        this.posts = postsData.posts;
-        // console.log(this.posts)
-        this.totalPosts = this.posts.filter(
-          (post) => post.creator === this.userId
-        ).length;
+        this.posts = [...postsData.posts].splice(
+          this.postsPerPage * (this.currentPage - 1),
+          this.postsPerPage
+        );
+        this.totalPosts = postsData.posts.length;
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService
@@ -50,15 +50,27 @@ export class PostListComponent implements OnInit, OnDestroy {
       });
   }
 
-  onChangedPage(pageData: PageEvent) {
-    this.currentPage = pageData.pageIndex + 1;
-    this.postsPerPage = pageData.pageSize;
-    this.postService.getPosts(this.postsPerPage, this.currentPage);
+  // onChangedPage(pageData: PageEvent) {
+  //   this.currentPage = pageData.pageIndex + 1;
+  //   this.postsPerPage = pageData.pageSize;
+  //   this.postService.getPosts();
+  // }
+
+  onArrowClicked(clickEvent: any) {
+      if (
+        clickEvent.target.classList.contains('arrow-right') &&
+        this.currentPage< Math.ceil(this.totalPosts / 3)
+      ) {
+        this.currentPage = this.currentPage + 1;
+      } else if (clickEvent.target.classList.contains('arrow-left') && this.currentPage - 1 > 0) {
+        this.currentPage = this.currentPage - 1;
+      }
+    this.postService.getPosts();
   }
 
   onDelete(postId: string) {
     this.postService.deletePost(postId).subscribe(() => {
-      this.postService.getPosts(this.postsPerPage, this.currentPage);
+      this.postService.getPosts();
     });
   }
 }

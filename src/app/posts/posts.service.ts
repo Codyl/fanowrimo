@@ -4,35 +4,37 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 @Injectable({ providedIn: 'root' })
 export class PostService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 
-  getPosts(postsPerPage: number, currentPage: number) {
-    const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;
+  getPosts() {
     this.http
       .get<{ message: string; posts: any; maxPosts: number }>(
-        'http://localhost:3000/api/posts' + queryParams
+        'http://localhost:3000/api/posts'
       )
       .pipe(
         map((postData) => {
           return {
-            posts: postData.posts.map((post) => {
-              // console.log(post.wordCount, "get word count")
-              return {
-                title: post.title,
-                description: post.description,
-                id: post._id,
-                imagePath: post.imagePath,
-                creator: post.creator,
-                goal: +post.goal,
-                wordCount: post.wordCount,
-                yearWritten: post.yearWritten
-              };
-            }),
+            posts: postData.posts
+              .filter(post => post.creator === this.authService.getUserId())
+              .map((post) => {
+                // console.log(post.wordCount, "get word count")
+                return {
+                  title: post.title,
+                  description: post.description,
+                  id: post._id,
+                  imagePath: post.imagePath,
+                  creator: post.creator,
+                  goal: +post.goal,
+                  wordCount: post.wordCount,
+                  yearWritten: post.yearWritten,
+                };
+              }),
             maxPosts: postData.maxPosts,
           };
         })

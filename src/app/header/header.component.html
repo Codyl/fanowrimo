@@ -12,6 +12,16 @@
         >New Book</a
       >
     </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/books" routerLinkActive="mat-accent"
+        >My Books</a
+      >
+    </li>
+    <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/family" routerLinkActive="mat-accent"
+        >My Family</a
+      >
+    </li>
     <li *ngIf="!userIsAuthenticated">
       <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a>
     </li>
@@ -23,5 +33,6 @@
     <li *ngIf="userIsAuthenticated">
       <button mat-button (click)="onLogout()">Logout</button>
     </li>
+    
   </ul>
 </mat-toolbar>
