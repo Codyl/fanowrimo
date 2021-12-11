@@ -31,18 +31,27 @@ router.post(
   multer({ storage: storage }).single("image"),
   checkAuth,
   (req, res, next) => {
-    // console.log(req.body);
+    console.log(req.body);
     const url = req.protocol + "://" + req.get("host");
+    let imagePath;
+    if (req.file) {
+      console.log("no file");
+      if (req.file.filename) {
+        imagePath = url + "/images/" + req.file.filename;
+      }
+    }
     const post = new Post({
       title: req.body.title,
       description: req.body.description,
-      imagePath: url + "/images/" + req.file.filename,
+      imagePath: imagePath,
       creator: req.userData.userId,
       goal: req.body.goal,
-      wordCount: [{ count: req.body.wordCount, date: new Date().toDateString() }],
-      yearWritten: req.body.yearWritten
+      wordCount: [
+        { count: req.body.wordCount, date: new Date().toDateString() },
+      ],
+      yearWritten: req.body.yearWritten,
     });
-    console.log(post)
+    console.log(post);
     post
       .save()
       .then((createdPost) => {
@@ -53,10 +62,10 @@ router.post(
             id: createdPost._id,
             title: createdPost.title,
             description: createdPost.description,
-            imagePath: createdPost.imagePath,
+            imagePath: createdPost?.imagePath,
             goal: createdPost.goal,
             wordCount: createdPost.wordCount,
-            yearWritten: createdPost.yearWritten
+            yearWritten: createdPost.yearWritten,
           },
         });
       })
@@ -85,7 +94,7 @@ router.put(
       imagePath: imagePath,
       creator: req.userData.userId,
       goal: req.body.goal,
-      wordCount: req.body.wordCount
+      wordCount: req.body.wordCount,
     });
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
       .then((result) => {
@@ -114,6 +123,7 @@ router.get("", (req, res, next) => {
   postQuery
     .then((documents) => {
       fetchedPosts = documents;
+      console.log(fetchedPosts)
       return Post.count();
     })
     .then((count) => {

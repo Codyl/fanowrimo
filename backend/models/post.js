@@ -6,7 +6,7 @@ const postSchema = mongoose.Schema({
   wordCount: [{count: Number, date: String}],
   goal: { type: Number },
   yearWritten: { type: Number },
-  imagePath: { type: String, required: true },
+  imagePath: { type: String },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

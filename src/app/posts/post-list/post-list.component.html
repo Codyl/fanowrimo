@@ -34,7 +34,9 @@
       <div class="container">
         <div class="book-year">{{ post.yearWritten }}</div>
         <div>
-          <img [src]="post.imagePath" alt="post.title" class="book-image" />
+          <img [src]="post.imagePath" alt="post.title" class="book-image" *ngIf="post.imagePath" />
+          <br/>
+          <div *ngIf="!post.imagePath">No image provided</div>
         </div>
         <div class="book-title">
           <h2 style="margin: 10px">{{ post.title }}</h2>

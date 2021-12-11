@@ -80,6 +80,7 @@ export class PostService {
     const postData = new FormData();
     postData.append('title', title);
     postData.append('description', description);
+    if(image)
     postData.append('image', image, title);
     postData.append('goal', `${goal}`);
     postData.append('wordCount', `${wordCount}`);
@@ -90,7 +91,7 @@ export class PostService {
         postData
       )
       .subscribe((responseData) => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/books']);
       });
   }
 

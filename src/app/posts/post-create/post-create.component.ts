@@ -32,7 +32,6 @@ export class PostCreateComponent implements OnInit {
       }),
       description: new FormControl(null, { validators: [Validators.required] }),
       image: new FormControl(null, {
-        validators: [Validators.required],
         asyncValidators: [mimeType],
       }),
       goal: new FormControl(50000, { validators: [Validators.required] }),
@@ -51,15 +50,16 @@ export class PostCreateComponent implements OnInit {
             id: postData._id,
             title: postData.title,
             description: postData.description,
-            imagePath: postData.imagePath,
+            imagePath: postData?.imagePath,
             creator: postData.creator,
             goal: postData.goal,
             wordCount: postData.wordCount,
           };
+          this.imagePreview = this.post.imagePath;
           this.form.setValue({
             title: this.post.title,
             description: this.post.description,
-            image: this.post.imagePath,
+            image: this.post.imagePath||'',
             goal: this.post.goal,
             wordCount:
               this.post.wordCount[this.post.wordCount.length - 1].count,
@@ -67,7 +67,7 @@ export class PostCreateComponent implements OnInit {
 
           //Now we draw the d3 chart
           const margin = { top: 10, right: 30, bottom: 30, left: 60 },
-            width = 1060 - margin.left - margin.right,
+            width = screen.width *.8 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
 
           // Make the svg
@@ -159,6 +159,5 @@ export class PostCreateComponent implements OnInit {
         this.form.value.wordCount
       );
     }
-    // this.form.reset();
   }
 }
