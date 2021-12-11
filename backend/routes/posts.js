@@ -31,11 +31,11 @@ router.post(
   multer({ storage: storage }).single("image"),
   checkAuth,
   (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     const url = req.protocol + "://" + req.get("host");
     let imagePath;
     if (req.file) {
-      console.log("no file");
+      // console.log("no file");
       if (req.file.filename) {
         imagePath = url + "/images/" + req.file.filename;
       }
@@ -98,7 +98,7 @@ router.put(
     });
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.modifiedCount > 0) {
           res.status(200).json({
             message: "success",
@@ -123,7 +123,7 @@ router.get("", (req, res, next) => {
   postQuery
     .then((documents) => {
       fetchedPosts = documents;
-      console.log(fetchedPosts)
+      // console.log(fetchedPosts)
       return Post.count();
     })
     .then((count) => {

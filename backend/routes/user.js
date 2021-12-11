@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
-const user = require("../models/user");
 
 router.post("/signup", (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
@@ -16,7 +15,7 @@ router.post("/signup", (req, res, next) => {
     user
       .save()
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         res.status(201).json({
           message: "user created!",
           result: result,
@@ -59,7 +58,8 @@ router.post("/login", (req, res, next) => {
       res.status(200).json({
         token: token,
         expiresIn: 3600,
-        userId: fetchedUser._id
+        userId: fetchedUser._id,
+        userFamilies: fetchedUser.families
       });
     })
     .catch((err) => {
@@ -69,33 +69,45 @@ router.post("/login", (req, res, next) => {
     });
 });
 
-router.put("/addToFamily", (req, res, next) => {
+router.put("", (req, res, next) => {
   // const newUser = req.body.user;
   // const family = req.body.family;
-  console.log(req.body, "puttest");
-  // User.updateOne(
-  //   { name: family.name, code: family.code },
-  //   {
-  //     members: [...family.members, newUser],
-  //   }
-  // )
-  //   .then((result) => {
-  //     console.log(result, "result");
-  //     if (result.modifiedCount > 0) {
-  //       res.status(200).json({
-  //         message: "success",
-  //       });
-  //     } else {
-  //       res.status(401).json({
-  //         message: "Not Authorized",
-  //       });
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     res.status(500).json({
-  //       message: "Couldn't update post!",
-  //     });
-  //   });
+  console.log(
+    "puttest",
+    req.body,
+    req.body.userFamilies
+  );
+  if (req.body.userFamilies.includes(req.body.family.id))
+  {
+    console.log('family already exists on user')
+    return res.status(200).json({
+     message: "already exists on user",
+     families: req.body.userFamilies,
+   });
+  }
+  User.updateOne(
+    { _id: req.body.userId },
+    {
+      families: [...req.body.userFamilies, req.body.family.id],
+    }
+  )
+    .then((result) => {
+      console.log(result, "result");
+      if (result.modifiedCount > 0) {
+        return res.status(200).json({
+          message: "success",
+          families: [...req.body.userFamilies, req.body.family.id],
+        });
+      } else {
+        res.status(401).json({
+          message: "Not Authorized",
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Couldn't update post!",
+      });
+    });
 });
-router.get("", (req, res, next) => {console.log('??')});
 module.exports = router;

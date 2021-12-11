@@ -4,3 +4,6 @@ mat-form-field {
 mat-card-header {
   font-size: large;
 }
+.book-image {
+  width: 300px;
+}

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { stringify } from 'querystring';
 import { AuthService } from '../auth/auth.service';
 import { Family } from './family.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -52,5 +53,25 @@ export class FamilyService {
         .subscribe((response) => {
           // this.router.navigate(['/books']);
         });
+  }
+
+  getFamilies(familyIds: string[]) {
+    return this.http.post('http://localhost:3000/api/families/myFamilies', familyIds)
+  }
+  
+  getBooks(memberIds: string[]) {
+    return this.http
+      .get<{ message: string; posts: any; maxPosts: number }>(
+        'http://localhost:3000/api/posts'
+      )
+      .pipe(
+        map((postData) => {
+          const date = new Date();
+          return {
+            books: postData.posts.filter((post) => memberIds.includes(post.creator) && post.yearWritten === date.getFullYear()),
+          };
+        })
+      );
+      
   }
 }

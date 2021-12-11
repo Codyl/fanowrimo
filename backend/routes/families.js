@@ -59,28 +59,27 @@ router.put("/:id", checkAuth, (req, res, next) => {
     });
 });
 
-// router.get("", (req, res, next) => {
-//   const postQuery = Post.find();
-//   let fetchedPosts;
-//   postQuery
-//     .then((documents) => {
-//       fetchedPosts = documents;
-//       return Post.count();
-//     })
-//     .then((count) => {
-//       // console.log(fetchedPosts)
-//       res.status(200).json({
-//         message: "Posts fetched successfully!",
-//         posts: fetchedPosts,
-//         maxPosts: count,
-//       });
-//     })
-//     .catch((error) => {
-//       res.status(500).json({
-//         message: "Fetching posts failed!",
-//       });
-//     });
-// });
+router.post("/myFamilies", (req, res, next) => {
+  console.log("get families", req.body);
+
+  const familyQuery = Family.find({ _id: { "$in" : req.body }});
+  // let fetchedPosts;
+  familyQuery
+    .then((families) => {
+      // fetchedPosts = documents;
+      // return Post.count();
+      console.log(families)
+      return res.status(200).json({
+        message: "Families fetched successfully!",
+        families: families,
+      });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Fetching families failed!",
+      });
+    });
+});
 router.post("/request", (req, res, next) => {
   let fetchedfamily;
   Family.findOne({ name: req.body.name, code: req.body.code })
@@ -91,7 +90,7 @@ router.post("/request", (req, res, next) => {
           message: "Find family failed",
         });
       }
-      console.log(family)
+      // console.log(family)
       fetchedfamily = family;
       res.status(200).json({
         id: fetchedfamily._id,
@@ -105,6 +104,8 @@ router.post("/request", (req, res, next) => {
       })
     })
 });
+
+
 
 // router.delete("/:id", checkAuth, (req, res, next) => {
 //   Post.deleteOne({ _id: req.params.id, creator: req.userData.userId })

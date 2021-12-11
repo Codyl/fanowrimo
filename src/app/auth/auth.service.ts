@@ -11,6 +11,7 @@ export class AuthService {
   private isAuthenticated = false;
   private userId: string;
   private authStatusListener = new Subject<boolean>();
+  private userFamilies: string[];
 
   constructor(private httpClient: HttpClient, private router: Router) {}
 
@@ -40,7 +41,7 @@ export class AuthService {
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
     this.httpClient
-      .post<{ token: string; expiresIn: number; userId: string }>(
+      .post<{ token: string; expiresIn: number; userId: string, userFamilies: string[] }>(
         'http://localhost:3000/api/user/login',
         authData
       )
@@ -53,6 +54,7 @@ export class AuthService {
           console.log(expiresInDuration);
           this.isAuthenticated = true;
           this.userId = response.userId;
+          this.userFamilies = response.userFamilies;
           this.authStatusListener.next(true);
           const now = new Date();
           const expirationDate = new Date(
@@ -77,6 +79,7 @@ export class AuthService {
       this.token = authInformation.token;
       this.isAuthenticated = true;
       this.userId = authInformation.userId;
+      this.userFamilies = authInformation.userFamilies;
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
     }
@@ -96,18 +99,22 @@ export class AuthService {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
+    localStorage.setItem('userFamilies', JSON.stringify(this.userFamilies));
   }
 
   private clearAuthData() {
     localStorage.removeItem('token');
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
+    localStorage.removeItem('userFamilies');
   }
 
   private getAuthData() {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
+    const userFamilies = JSON.parse(localStorage.getItem('userFamilies'));
+    console.log(userFamilies, "families from localstorage")
     if (!token || !expirationDate) {
       return;
     }
@@ -115,6 +122,7 @@ export class AuthService {
       token: token,
       expiration: new Date(expirationDate),
       userId: userId,
+      userFamilies: userFamilies
     };
   }
   private setAuthTimer(duration: number) {
@@ -126,12 +134,13 @@ export class AuthService {
   getUserId() {
     return this.userId;
   }
+  getUserFamilies() {
+    return this.userFamilies;
+  }
 
-  addFamilyToUser(familyId: string) {
-    console.log("add family to user", familyId)
-    this.httpClient.put(
-      'http://localhost:3000/api/user/addToFamily',
-      familyId
-    );
+  addFamilyToUser(familyData) {
+    console.log("add family to user", familyData.id)
+    return this.httpClient
+      .put('http://localhost:3000/api/user', { family: familyData, userId: this.getUserId(), userFamilies: this.getUserFamilies() })
   }
 }
