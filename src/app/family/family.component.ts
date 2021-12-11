@@ -1,5 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
+import { Family } from './family.model';
 import { FamilyService } from './family.service';
 
 @Component({
@@ -8,8 +11,14 @@ import { FamilyService } from './family.service';
   styleUrls: ['./family.component.css'],
 })
 export class FamilyComponent implements OnInit {
-  selectedValue;
-  constructor(private familyService: FamilyService) {}
+  selectedValue = 'join';
+  familyName;
+  family: Family;
+  constructor(
+    private familyService: FamilyService,
+    private authService: AuthService,
+    public route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {}
 
@@ -25,11 +34,18 @@ export class FamilyComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    console.log('join', form);
-    //if this family name exists
-    //if the name and code are correct
-    // Add this member to the family
-    // this.familyService.updateFamily(form.va)
+
+    this.familyName = form.value.code;
+    this.familyService
+      .getFamily(form.value.familyName, form.value.code)
+      .subscribe((familyData) => {
+        console.log(familyData, 'postedData');
+        if (familyData) {
+          //Adds a member to the selected family
+          this.familyService.addMember(familyData);
+          this.authService.addFamilyToUser(familyData.id)
+        }
+      });
   }
 
   onMethodChange(event) {

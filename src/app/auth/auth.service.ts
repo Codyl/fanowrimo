@@ -31,7 +31,7 @@ export class AuthService {
     return this.httpClient
       .post('http://localhost:3000/api/user/signup', AuthData)
       .subscribe(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/login']);
       }, error => {
         this.authStatusListener.next(false);
       });
@@ -58,7 +58,7 @@ export class AuthService {
           const expirationDate = new Date(
             now.getTime() + expiresInDuration * 1000
           );
-          console.log(expirationDate);
+          // console.log(expirationDate);
           this.saveAuthData(token, expirationDate, this.userId);
           this.router.navigate(['/']);
         }
@@ -118,7 +118,6 @@ export class AuthService {
     };
   }
   private setAuthTimer(duration: number) {
-    // console.log('setting timer');
     this.tokenTimer = setTimeout(() => {
       this.logout();
     }, duration * 1000);
@@ -126,5 +125,13 @@ export class AuthService {
 
   getUserId() {
     return this.userId;
+  }
+
+  addFamilyToUser(familyId: string) {
+    console.log("add family to user", familyId)
+    this.httpClient.put(
+      'http://localhost:3000/api/user/addToFamily',
+      familyId
+    );
   }
 }

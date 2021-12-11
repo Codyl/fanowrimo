@@ -11,6 +11,7 @@ router.post("/signup", (req, res, next) => {
     const user = new User({
       email: req.body.email,
       password: hash,
+      families: []
     });
     user
       .save()
@@ -67,4 +68,34 @@ router.post("/login", (req, res, next) => {
       });
     });
 });
+
+router.put("/addToFamily", (req, res, next) => {
+  // const newUser = req.body.user;
+  // const family = req.body.family;
+  console.log(req.body, "puttest");
+  // User.updateOne(
+  //   { name: family.name, code: family.code },
+  //   {
+  //     members: [...family.members, newUser],
+  //   }
+  // )
+  //   .then((result) => {
+  //     console.log(result, "result");
+  //     if (result.modifiedCount > 0) {
+  //       res.status(200).json({
+  //         message: "success",
+  //       });
+  //     } else {
+  //       res.status(401).json({
+  //         message: "Not Authorized",
+  //       });
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     res.status(500).json({
+  //       message: "Couldn't update post!",
+  //     });
+  //   });
+});
+router.get("", (req, res, next) => {console.log('??')});
 module.exports = router;

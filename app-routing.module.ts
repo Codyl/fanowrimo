@@ -19,6 +19,11 @@ const routes: Routes = [
     component: PostCreateComponent,
     canActivate: [AuthGuard],
   },
+  {
+    path: 'family/:familyId',
+    component: FamilyComponent,
+    canActivate: [AuthGuard],
+  },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
 ];

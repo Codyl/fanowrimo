@@ -30,18 +30,18 @@ router.post("", checkAuth, (req, res, next) => {
 });
 
 router.put("/:id", checkAuth, (req, res, next) => {
-  const post = new Post({
-    _id: req.body.id,
-    name: req.body.name,
-    code: req.body.code,
-    members: req.body.members,
-  });
-  Post.updateOne(
-    { _id: req.params.id, name: req.userData.name, code: req.userData.code },
-    post
+  const newUser = req.body.user;
+  const family = req.body.family;
+  console.log(family,newUser, 'puttest')
+  Family.updateOne(
+    { name: family.name, code: family.code },
+    {
+      members: [...family.members, newUser]
+
+    }
   )
     .then((result) => {
-      console.log(result);
+      console.log(result,'result');
       if (result.modifiedCount > 0) {
         res.status(200).json({
           message: "success",
@@ -81,21 +81,29 @@ router.put("/:id", checkAuth, (req, res, next) => {
 //       });
 //     });
 // });
-
-router.get("/:id", (req, res, next) => {
-  Post.findById(req.params.id)
-    .then((post) => {
-      if (post) {
-        res.status(200).json(post);
-      } else {
-        res.status(404).json({ message: "Post not found" });
+router.post("/request", (req, res, next) => {
+  let fetchedfamily;
+  Family.findOne({ name: req.body.name, code: req.body.code })
+    .then((family) => {
+      //We do not have this email in the database of familys.
+      if (!family) {
+        return res.status(401).json({
+          message: "Find family failed",
+        });
       }
+      console.log(family)
+      fetchedfamily = family;
+      res.status(200).json({
+        id: fetchedfamily._id,
+        members: fetchedfamily.members,
+        name: fetchedfamily.name,
+        code: fetchedfamily.code
+      })
+    }).catch((err) => {
+      return res.status(401).json({
+        message: "Invalid authentication credentials",
+      })
     })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Fetching post failed!",
-      });
-    });
 });
 
 // router.delete("/:id", checkAuth, (req, res, next) => {
