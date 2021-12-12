@@ -11,7 +11,7 @@ router.post("/signup", (req, res, next) => {
       email: req.body.email,
       password: hash,
       name: req.body.name,
-      families: []
+      families: [],
     });
     user
       .save()
@@ -24,7 +24,7 @@ router.post("/signup", (req, res, next) => {
       })
       .catch((err) => {
         res.status(500).json({
-            message: "Invalid authentication credentials!"
+          message: "Invalid authentication credentials!",
         });
       });
   });
@@ -60,7 +60,7 @@ router.post("/login", (req, res, next) => {
         token: token,
         expiresIn: 3600,
         userId: fetchedUser._id,
-        userFamilies: fetchedUser.families
+        userFamilies: fetchedUser.families,
       });
     })
     .catch((err) => {
@@ -71,18 +71,13 @@ router.post("/login", (req, res, next) => {
 });
 
 router.put("", (req, res, next) => {
-  console.log(
-    "puttest",
-    req.body,
-    req.body.userFamilies
-  );
-  if (req.body.userFamilies.includes(req.body.family.id))
-  {
-    console.log('family already exists on user')
+  console.log("puttest", req.body, req.body.userFamilies);
+  if (req.body.userFamilies.includes(req.body.family.id)) {
+    console.log("family already exists on user");
     return res.status(200).json({
-     message: "already exists on user",
-     families: req.body.userFamilies,
-   });
+      message: "already exists on user",
+      families: req.body.userFamilies,
+    });
   }
   User.updateOne(
     { _id: req.body.userId },
@@ -112,14 +107,16 @@ router.put("", (req, res, next) => {
 
 router.get("/names", (req, res, next) => {
   //We have the user ids now we need the names
-  console.log("requesting names")
+  console.log("requesting names");
   const userQuery = User.find();
-  userQuery.then(users => {
-    const names = users.map(user => user.name);
-    console.log(names, '<= users')
-    res.status(200).json({
-      names: names
+  userQuery.then((users) => {
+    const names = users.map((user) => {
+      return { id: user._id, username: user.name };
     });
-  })
- })
+    console.log(names, "<= users");
+    res.status(200).json({
+      names: names,
+    });
+  });
+});
 module.exports = router;

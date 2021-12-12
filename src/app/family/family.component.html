@@ -73,15 +73,12 @@
 </mat-card>
 <div *ngFor="let family of families; let i = index">
   <h1>{{ family.name }} Family</h1>
-  <!-- <button
-    mat-raised-button
-    color="accent"
-    (click)="window.alert(familyCodes[i])"
-  >
-    Share join code
-  </button> -->
+  <button mat-raised-button color="accent" (click)="getJoinCode(i)">
+    Show join code
+  </button>
+  <p [id]="i"></p>
   <mat-card *ngFor="let book of familiesBooks">
-    <mat-card-header>{{ namesInFamily.names[0] }}</mat-card-header>
+    <mat-card-header [innerText]="getCreatorName(book)"></mat-card-header>
     <mat-card-content>
       <p>Title: {{ book.title }}</p>
       <p>Description: {{ book.description }}</p>

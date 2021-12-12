@@ -61,7 +61,9 @@ export class FamilyComponent implements OnInit {
       });
     //Get the names of the book creators in the family
     this.familyService.getNamesOfBookCreators().subscribe((names) => {
-      this.namesInFamily = names;
+      const data = [JSON.parse(JSON.stringify(names))];
+      console.log(data);
+      this.namesInFamily = data.map((name) => name.names);
       console.log(this.namesInFamily, 'names here');
     });
   }
@@ -117,12 +119,16 @@ export class FamilyComponent implements OnInit {
   }
 
   getCreatorName(book) {
-    // this.postService.getPost(book.creator).subscribe((familyData) => {
-    //   console.log(familyData, 'look here');
-    // });
-    console.log(
-      this.namesInFamily.names.filter((name) => book.creator === name)[0]
-    );
-    return this.namesInFamily.names.filter((name) => book.creator === name)[0];
+    return this.namesInFamily[0].filter((name) => book.creator === name.id)[0]
+      .username;
+  }
+
+  getJoinCode(i: number) {
+    const elem = document.getElementById(i.toString());
+    if (elem.innerText !== this.familyCodes[i]) {
+      elem.innerText = this.familyCodes[i];
+    } else {
+      elem.innerText = '';
+    }
   }
 }
