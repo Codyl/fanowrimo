@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AuthData } from './auth-data.model';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -29,30 +32,31 @@ export class AuthService {
 
   createUser(email: string, password: string, name: string) {
     const AuthData: AuthData = { email: email, password: password, name: name };
-    return this.httpClient
-      .post('http://localhost:3000/api/user/signup', AuthData)
-      .subscribe(() => {
-        this.router.navigate(['/login']);
-      }, error => {
+    return this.httpClient.post(BACKEND_URL + '/signup', AuthData).subscribe(
+      () => {
+        this.login(AuthData.email, AuthData.password);
+      },
+      (error) => {
         this.authStatusListener.next(false);
-      });
+      }
+    );
   }
 
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password, name: null };
     this.httpClient
-      .post<{ token: string; expiresIn: number; userId: string, userFamilies: string[] }>(
-        'http://localhost:3000/api/user/login',
-        authData
-      )
+      .post<{
+        token: string;
+        expiresIn: number;
+        userId: string;
+        userFamilies: string[];
+      }>(BACKEND_URL + '/login', authData)
       .subscribe((response) => {
         const token = response.token;
         this.token = token;
-        console.log(response.userFamilies, 'in login func');
         if (token) {
           const expiresInDuration = response.expiresIn;
           this.setAuthTimer(expiresInDuration);
-          console.log(expiresInDuration);
           this.isAuthenticated = true;
           this.userId = response.userId;
           this.userFamilies = response.userFamilies;
@@ -61,7 +65,6 @@ export class AuthService {
           const expirationDate = new Date(
             now.getTime() + expiresInDuration * 1000
           );
-          // console.log(expirationDate);
           this.saveAuthData(token, expirationDate, this.userId);
           this.router.navigate(['/']);
         }
@@ -115,7 +118,6 @@ export class AuthService {
     const expirationDate = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
     const userFamilies = JSON.parse(localStorage.getItem('userFamilies'));
-    console.log(userFamilies, "families from localstorage")
     if (!token || !expirationDate) {
       return;
     }
@@ -123,7 +125,7 @@ export class AuthService {
       token: token,
       expiration: new Date(expirationDate),
       userId: userId,
-      userFamilies: userFamilies
+      userFamilies: userFamilies,
     };
   }
   private setAuthTimer(duration: number) {
@@ -136,12 +138,15 @@ export class AuthService {
     return this.userId;
   }
   getUserFamilies() {
+    this.userFamilies = JSON.parse(localStorage.getItem('userFamilies'));
     return this.userFamilies;
   }
 
-  addFamilyToUser(familyData) {
-    console.log("add family to user", familyData.id)
-    return this.httpClient
-      .put('http://localhost:3000/api/user', { family: familyData, userId: this.getUserId(), userFamilies: this.getUserFamilies() })
+  addFamilyToUser(familyData: { name: string; id: string }) {
+    return this.httpClient.put(BACKEND_URL, {
+      family: familyData,
+      userId: this.getUserId(),
+      userFamilies: this.getUserFamilies(),
+    });
   }
 }

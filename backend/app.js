@@ -11,7 +11,7 @@ const app = express();
 
 mongoose
   .connect(
-    "mongodb+srv://cody:NnPsjXQeEzj7cFjN@cluster0.jbuvc.mongodb.net/node-angular"
+    "mongodb+srv://cody:"+process.env.MONGO_ATLAS_PW+"@cluster0.jbuvc.mongodb.net/node-angular"
   )
   .then(() => {
     console.log("connected to db");
@@ -22,7 +22,7 @@ mongoose
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ entended: false }));
-app.use("/images", express.static(path.join("backend/images")));
+app.use("/images", express.static(path.join("images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

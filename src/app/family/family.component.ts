@@ -26,21 +26,13 @@ export class FamilyComponent implements OnInit {
     private postService: PostService,
     public route: ActivatedRoute
   ) {}
-
+//TODO Set the userFamilies in auth.service to allow the getFamilies method to work
   ngOnInit(): void {
     //get the familys themselves
-
     this.familyService
       .getFamilies(this.authService.getUserFamilies())
       .subscribe((familyData) => {
-        console.log(
-          JSON.parse(JSON.stringify(familyData)).families,
-          'returned families',
-          JSON.stringify(familyData),
-          this.authService.getUserFamilies()
-        );
         for (let family of JSON.parse(JSON.stringify(familyData)).families) {
-          console.log(family.code);
           this.familyCodes.push(family.code);
         }
         const requestedFamilies = JSON.parse(
@@ -52,19 +44,16 @@ export class FamilyComponent implements OnInit {
           this.familyService
             .getBooks(this.families[0].members)
             .subscribe((posts) => {
-              console.log(posts);
               this.familiesBooks = posts.books;
             });
         } else {
-          console.log('none');
+          // console.log('none');
         }
       });
     //Get the names of the book creators in the family
     this.familyService.getNamesOfBookCreators().subscribe((names) => {
       const data = [JSON.parse(JSON.stringify(names))];
-      console.log(data);
       this.namesInFamily = data.map((name) => name.names);
-      console.log(this.namesInFamily, 'names here');
     });
   }
 
@@ -72,7 +61,6 @@ export class FamilyComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    // console.log('create', form);
     this.familyService.addFamily(form.value.familyName, form.value.code);
   }
 
@@ -85,7 +73,6 @@ export class FamilyComponent implements OnInit {
     this.familyService
       .getFamily(form.value.familyName, form.value.code)
       .subscribe((familyData) => {
-        console.log(familyData.id, 'posted Data');
         if (familyData) {
           //Adds a member to the selected family
           this.familyService.addMember(familyData);
@@ -93,16 +80,12 @@ export class FamilyComponent implements OnInit {
             const data: { families: string[]; message: string } = JSON.parse(
               JSON.stringify(families)
             );
-            console.log(data.families, '<= my families are');
+            localStorage.setItem('userFamilies', JSON.stringify(data.families));
             //update our families to have the newly joined family
             this.familyService
               .getFamilies(this.authService.getUserFamilies())
               .subscribe((familyData) => {
-                console.log(
-                  JSON.parse(JSON.stringify(familyData)).families,
-                  'returned families',
-                  familyData
-                );
+
                 const requestFamilies = JSON.parse(
                   JSON.stringify(familyData)
                 ).families;
@@ -115,7 +98,6 @@ export class FamilyComponent implements OnInit {
 
   onMethodChange(event) {
     this.selectedValue = event.value;
-    // console.log(event.value);
   }
 
   getCreatorName(book) {

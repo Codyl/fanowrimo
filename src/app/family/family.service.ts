@@ -5,6 +5,9 @@ import { stringify } from 'querystring';
 import { AuthService } from '../auth/auth.service';
 import { Family } from './family.model';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/families';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +27,7 @@ export class FamilyService {
     return this.http.post<{
       name: string,
       id: string
-    }>('http://localhost:3000/api/families/request/',familyData);
+    }>(BACKEND_URL+'/request/',familyData);
   }
 
   addFamily(familyName: string, code: string) {
@@ -34,10 +37,7 @@ export class FamilyService {
       members: [this.authService.getUserId()],
     };
     this.http
-      .post<{ message: string; family: Family }>(
-        'http://localhost:3000/api/families/',
-        familyData
-      )
+      .post<{ message: string; family: Family }>(BACKEND_URL, familyData)
       .subscribe((responseData) => {
         // this.router.navigate(['/']);
       });
@@ -46,7 +46,7 @@ export class FamilyService {
   addMember(familyData) {
     if (!familyData.members.includes(this.authService.getUserId()))
       this.http
-        .put('http://localhost:3000/api/families/' + familyData.familyId, {
+        .put(BACKEND_URL +'/'+ familyData.familyId, {
           user: this.authService.getUserId(),
           family: familyData,
         })
@@ -57,13 +57,13 @@ export class FamilyService {
   }
 
   getFamilies(familyIds: string[]) {
-    return this.http.post('http://localhost:3000/api/families/myFamilies', { ids: familyIds })
+    return this.http.post(BACKEND_URL+'/myFamilies', { ids: familyIds })
   }
   
   getBooks(memberIds: string[]) {
     return this.http
       .get<{ message: string; posts: any; maxPosts: number }>(
-        'http://localhost:3000/api/posts'
+        environment.apiUrl + '/posts'
       )
       .pipe(
         map((postData) => {
@@ -80,6 +80,6 @@ export class FamilyService {
   }
 
   getNamesOfBookCreators() {
-    return this.http.get('http://localhost:3000/api/user/names');
+    return this.http.get(environment.apiUrl + '/user/names');
   }
 }

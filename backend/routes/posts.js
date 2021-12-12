@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     if (isValid) {
       error = null;
     }
-    cb(error, "backend/images");
+    cb(error, "images");
   },
   filename: (req, file, cb) => {
     const name = file.originalname.toLowerCase().split(" ").join("-");
@@ -31,11 +31,9 @@ router.post(
   multer({ storage: storage }).single("image"),
   checkAuth,
   (req, res, next) => {
-    // console.log(req.body);
     const url = req.protocol + "://" + req.get("host");
     let imagePath;
     if (req.file) {
-      // console.log("no file");
       if (req.file.filename) {
         imagePath = url + "/images/" + req.file.filename;
       }
@@ -51,11 +49,9 @@ router.post(
       ],
       yearWritten: req.body.yearWritten,
     });
-    console.log(post);
     post
       .save()
       .then((createdPost) => {
-        // console.log(createdPost)
         res.status(201).json({
           message: "Post added successfully",
           post: {
@@ -98,7 +94,6 @@ router.put(
     });
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
       .then((result) => {
-        // console.log(result);
         if (result.modifiedCount > 0) {
           res.status(200).json({
             message: "success",
@@ -123,11 +118,9 @@ router.get("", (req, res, next) => {
   postQuery
     .then((documents) => {
       fetchedPosts = documents;
-      // console.log(fetchedPosts)
       return Post.count();
     })
     .then((count) => {
-      // console.log(fetchedPosts)
       res.status(200).json({
         message: "Posts fetched successfully!",
         posts: fetchedPosts,

@@ -91,7 +91,6 @@ export class PostCreateComponent implements OnInit {
             .append('g')
             .attr('transform', 'translate(0,' + height + ')')
             .call(d3.axisBottom(x));
-          // console.log(x)
           const y = d3
             .scaleLinear()
             .domain([0, postData.goal])
@@ -109,7 +108,6 @@ export class PostCreateComponent implements OnInit {
               d3
                 .line()
                 .x(function (d) {
-                  // console.log(d)
                   return x(Date.parse(d.date));
                 })
                 .y(function (d) {
@@ -149,7 +147,6 @@ export class PostCreateComponent implements OnInit {
         this.form.value.wordCount
       );
     } else {
-      console.log(this.form.value.wordCount);
       this.postService.updatePost(
         this.postId,
         this.form.value.title,

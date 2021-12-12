@@ -12,7 +12,6 @@ router.post("", checkAuth, (req, res, next) => {
   family
     .save()
     .then((createdFamily) => {
-      // console.log(createdPost)
       res.status(201).json({
         message: "Family added successfully",
         family: {
@@ -32,7 +31,6 @@ router.post("", checkAuth, (req, res, next) => {
 router.put("/:id", checkAuth, (req, res, next) => {
   const newUser = req.body.user;
   const family = req.body.family;
-  console.log(family,newUser, 'puttest')
   Family.updateOne(
     { name: family.name, code: family.code },
     {
@@ -41,7 +39,6 @@ router.put("/:id", checkAuth, (req, res, next) => {
     }
   )
     .then((result) => {
-      console.log(result,'result');
       if (result.modifiedCount > 0) {
         res.status(200).json({
           message: "success",
@@ -60,15 +57,10 @@ router.put("/:id", checkAuth, (req, res, next) => {
 });
 
 router.post("/myFamilies", (req, res, next) => {
-  console.log("get families", req.body);
 
   const familyQuery = Family.find({ _id: { "$in" : req.body.ids }});
-  // let fetchedPosts;
   familyQuery
     .then((families) => {
-      // fetchedPosts = documents;
-      // return Post.count();
-      console.log(families)
       return res.status(200).json({
         message: "Families fetched successfully!",
         families: families,
@@ -90,7 +82,6 @@ router.post("/request", (req, res, next) => {
           message: "Find family failed",
         });
       }
-      // console.log(family)
       fetchedfamily = family;
       res.status(200).json({
         id: fetchedfamily._id,

@@ -5,6 +5,10 @@ import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/posts';
+
 @Injectable({ providedIn: 'root' })
 export class PostService {
   private posts: Post[] = [];
@@ -18,16 +22,13 @@ export class PostService {
 
   getPosts() {
     this.http
-      .get<{ message: string; posts: any; maxPosts: number }>(
-        'http://localhost:3000/api/posts'
-      )
+      .get<{ message: string; posts: any; maxPosts: number }>(BACKEND_URL)
       .pipe(
         map((postData) => {
           return {
             posts: postData.posts
               .filter((post) => post.creator === this.authService.getUserId())
               .map((post) => {
-                // console.log(post.wordCount, "get word count")
                 return {
                   title: post.title,
                   description: post.description,
@@ -44,9 +45,7 @@ export class PostService {
         })
       )
       .subscribe((transformedPostsData) => {
-        // console.log(transformedPostsData);
         this.posts = transformedPostsData.posts;
-        // console.log(this.posts, " <- posts updated")
         this.postsUpdated.next({
           posts: [...this.posts],
           postCount: transformedPostsData.maxPosts,
@@ -67,7 +66,7 @@ export class PostService {
       creator: string;
       goal: number;
       wordCount: [{ count: number; date: string }];
-    }>('http://localhost:3000/api/posts/' + id);
+    }>(BACKEND_URL +'/'+ id);
   }
 
   addPost(
@@ -86,10 +85,7 @@ export class PostService {
     postData.append('wordCount', `${wordCount}`);
     postData.append('yearWritten', new Date().getFullYear().toString());
     this.http
-      .post<{ message: string; post: Post }>(
-        'http://localhost:3000/api/posts/',
-        postData
-      )
+      .post<{ message: string; post: Post }>(BACKEND_URL, postData)
       .subscribe((responseData) => {
         this.router.navigate(['/books']);
       });
@@ -143,15 +139,13 @@ export class PostService {
           wordCount: newWordCount,
         };
       }
-      this.http
-        .put('http://localhost:3000/api/posts/' + id, postData)
-        .subscribe((response) => {
-          this.router.navigate(['/books']);
-        });
+      this.http.put(BACKEND_URL +'/'+ id, postData).subscribe((response) => {
+        this.router.navigate(['/books']);
+      });
     });
   }
 
   deletePost(postId: string) {
-    return this.http.delete('http://localhost:3000/api/posts/' + postId);
+    return this.http.delete(BACKEND_URL + postId);
   }
 }

@@ -7,7 +7,6 @@ export const mimeType = (
   if (typeof control.value === 'string' || control.value === null) {
     return of(null);
   }
-  console.log(control);
   const file = control.value as File;
   const fileReader = new FileReader();
   const frObs = Observable.create(
@@ -40,7 +39,6 @@ export const mimeType = (
         if (isValid) {
           observer.next(null);
         } else {
-          console.log('invalid');
           observer.next({ invalidMimeType: true });
         }
         observer.complete();

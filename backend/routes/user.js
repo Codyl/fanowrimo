@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
@@ -16,7 +16,6 @@ router.post("/signup", (req, res, next) => {
     user
       .save()
       .then((result) => {
-        // console.log(result);
         res.status(201).json({
           message: "user created!",
           result: result,
@@ -51,7 +50,7 @@ router.post("/login", (req, res, next) => {
       }
       const token = jwt.sign(
         { email: fetchedUser.email, userId: fetchedUser._id },
-        "super_secret_private_key_uncrackable_long_string",
+        process.env.JWT_KEY,
         {
           expiresIn: "1h",
         }
@@ -71,9 +70,7 @@ router.post("/login", (req, res, next) => {
 });
 
 router.put("", (req, res, next) => {
-  console.log("puttest", req.body, req.body.userFamilies);
   if (req.body.userFamilies.includes(req.body.family.id)) {
-    console.log("family already exists on user");
     return res.status(200).json({
       message: "already exists on user",
       families: req.body.userFamilies,
@@ -86,7 +83,6 @@ router.put("", (req, res, next) => {
     }
   )
     .then((result) => {
-      console.log(result, "result");
       if (result.modifiedCount > 0) {
         return res.status(200).json({
           message: "success",
@@ -107,13 +103,11 @@ router.put("", (req, res, next) => {
 
 router.get("/names", (req, res, next) => {
   //We have the user ids now we need the names
-  console.log("requesting names");
   const userQuery = User.find();
   userQuery.then((users) => {
     const names = users.map((user) => {
       return { id: user._id, username: user.name };
     });
-    console.log(names, "<= users");
     res.status(200).json({
       names: names,
     });
