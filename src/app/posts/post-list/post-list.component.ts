@@ -31,9 +31,9 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log(window.screen.width);
-    if (window.screen.width > 1800) {
+    if (window.screen.width > 1600) {
       this.postsPerPage = 4;
-    } else if (window.screen.width > 1400) {
+    } else if (window.screen.width > 1200) {
       this.postsPerPage = 3;
     } else if (window.screen.width > 800) {
       this.postsPerPage = 2;

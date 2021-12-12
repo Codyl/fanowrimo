@@ -1,5 +1,5 @@
 <mat-card>
-    <h1>Fanowrimo</h1>
+    <h1>Sign up</h1>
   <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
     <mat-form-field>
       <input
@@ -14,6 +14,20 @@
       />
       <mat-error *ngIf="emailInput.invalid"
         >Please enter valid email.</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        name="name"
+        ngModel
+        type="name"
+        placeholder="Name"
+        #emailInput="ngModel"
+        required
+      />
+      <mat-error *ngIf="emailInput.invalid"
+        >Please enter your name.</mat-error
       >
     </mat-form-field>
 
@@ -33,4 +47,7 @@
     </mat-form-field>
     <button mat-raised-button color="accent" type="submit">Signup</button>
   </form>
+  <div class="link">
+    <a routerLink="/login">Already have an account?</a>
+  </div>
 </mat-card>

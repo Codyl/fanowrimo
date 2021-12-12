@@ -27,8 +27,8 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
-  createUser(email: string, password: string) {
-    const AuthData: AuthData = { email: email, password: password };
+  createUser(email: string, password: string, name: string) {
+    const AuthData: AuthData = { email: email, password: password, name: name };
     return this.httpClient
       .post('http://localhost:3000/api/user/signup', AuthData)
       .subscribe(() => {
@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    const authData: AuthData = { email: email, password: password };
+    const authData: AuthData = { email: email, password: password, name: null };
     this.httpClient
       .post<{ token: string; expiresIn: number; userId: string, userFamilies: string[] }>(
         'http://localhost:3000/api/user/login',
@@ -48,6 +48,7 @@ export class AuthService {
       .subscribe((response) => {
         const token = response.token;
         this.token = token;
+        console.log(response.userFamilies, 'in login func');
         if (token) {
           const expiresInDuration = response.expiresIn;
           this.setAuthTimer(expiresInDuration);

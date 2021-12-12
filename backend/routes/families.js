@@ -62,7 +62,7 @@ router.put("/:id", checkAuth, (req, res, next) => {
 router.post("/myFamilies", (req, res, next) => {
   console.log("get families", req.body);
 
-  const familyQuery = Family.find({ _id: { "$in" : req.body }});
+  const familyQuery = Family.find({ _id: { "$in" : req.body.ids }});
   // let fetchedPosts;
   familyQuery
     .then((families) => {

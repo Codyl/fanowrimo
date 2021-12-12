@@ -10,6 +10,7 @@ router.post("/signup", (req, res, next) => {
     const user = new User({
       email: req.body.email,
       password: hash,
+      name: req.body.name,
       families: []
     });
     user
@@ -70,8 +71,6 @@ router.post("/login", (req, res, next) => {
 });
 
 router.put("", (req, res, next) => {
-  // const newUser = req.body.user;
-  // const family = req.body.family;
   console.log(
     "puttest",
     req.body,
@@ -110,4 +109,17 @@ router.put("", (req, res, next) => {
       });
     });
 });
+
+router.get("/names", (req, res, next) => {
+  //We have the user ids now we need the names
+  console.log("requesting names")
+  const userQuery = User.find();
+  userQuery.then(users => {
+    const names = users.map(user => user.name);
+    console.log(names, '<= users')
+    res.status(200).json({
+      names: names
+    });
+  })
+ })
 module.exports = router;

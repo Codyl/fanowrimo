@@ -52,11 +52,12 @@ export class FamilyService {
         })
         .subscribe((response) => {
           // this.router.navigate(['/books']);
+          // this.authService.setUserFamilies(res)
         });
   }
 
   getFamilies(familyIds: string[]) {
-    return this.http.post('http://localhost:3000/api/families/myFamilies', familyIds)
+    return this.http.post('http://localhost:3000/api/families/myFamilies', { ids: familyIds })
   }
   
   getBooks(memberIds: string[]) {
@@ -68,10 +69,17 @@ export class FamilyService {
         map((postData) => {
           const date = new Date();
           return {
-            books: postData.posts.filter((post) => memberIds.includes(post.creator) && post.yearWritten === date.getFullYear()),
+            books: postData.posts.filter((post) =>
+              memberIds.includes(post.creator) &&
+              post.yearWritten === date.getFullYear() &&
+              post.creator !== this.authService.getUserId()),
           };
         })
       );
       
+  }
+
+  getNamesOfBookCreators() {
+    return this.http.get('http://localhost:3000/api/user/names');
   }
 }
